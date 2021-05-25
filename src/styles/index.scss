@@ -66,7 +66,9 @@ div:focus {
 
 // 將搜尋欄和表格隔一排
 .filter-container {
+  padding-top: 15px;
   padding-bottom: 10px;
+  padding-left: 5rem;
 
   .filter-item {
     display: inline-block;
