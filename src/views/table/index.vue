@@ -30,7 +30,7 @@
     </div>
     <el-table
       v-loading="listLoading"
-      :data="fundData"
+      :data="tableData"
       element-loading-text="Loading"
       border
       fit
@@ -105,11 +105,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <div>
+      <Dialog
+        :dialog="dialog"
+        :formData="formData"
+        @update="getFund"
+      ></Dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import waves from "@/directive/waves";
+import Dialog from "@/components/Dialog";
 export default {
   name: "Table",
   // 自定義按鈕波紋動畫，使用v-waves
@@ -126,6 +134,16 @@ export default {
   // },
   data() {
     return {
+      tableData: null,
+      formData: {
+        id: "",
+        item_type: "",
+        items: "",
+        cost: "",
+        date: "",
+        payer_id: "",
+        recorder_id: "",
+      },
       fundData: [
         {
           id: 1,
@@ -164,21 +182,79 @@ export default {
           recorder_id: "徐仕勳",
         },
       ],
-      // listLoading: true,
-      listLoading: false,
+      listLoading: true,
       search: "",
+      dialog: {
+        show: false,
+        title: "",
+        option: "edit",
+      },
     };
   },
   created() {
     // this.fetchData();
+    this.getFund()
   },
   methods: {
+    getFund() {
+      this.listLoading = true
+      // 獲取表格數據
+      // this.$axios
+      //   .get("/api/profiles")
+      //   .then((res) => {
+      //     this.tableData = res.data;
+      //   })
+      //   .catch((err) => console.log(err));    
+      this.tableData = this.fundData
+      this.listLoading = false
+    },
     handleFilter() {
       console.log("handleFilter");
     },
     handleCreate() {
+      this.dialog = {
+        show: true,
+        title: "添加經費",
+        option: "add",
+      },
+      this.formData = {
+        id: "",
+        item_type: "",
+        items: "",
+        cost: "",
+        date: "",
+        payer_id: "",
+        recorder_id: "",
+      },
       console.log("handleCreate");
     },
+    handleEdit(index, row) {
+      this.dialog = {
+        show: true,
+        title: "修改經費",
+        option: "edit",
+      };
+      this.formData = {
+        id: row.id,
+        item_type: row.item_type,
+        items: row.items,
+        cost: row.cost,
+        date: row.date,
+        payer_id: row.payer_id,
+        recorder_id: row.recorder_id, 
+      };
+    },
+    handleDelete(index, row){
+      // this.$axios.delete(`api/profiles/delete/${row._id}`).then(res => {
+      //   this.$message("刪除成功")
+      //   this.getFund()
+      // })
+      console.log("handleDelete")
+      console.log(index, row)
+    }
+  },
+  components: {
+    Dialog,
   },
 };
 </script>

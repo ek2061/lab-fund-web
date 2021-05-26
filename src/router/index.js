@@ -31,15 +31,15 @@ const router = new VueRouter({
 });
 
 // 路由守衛
-router.beforeEach((to, from, next) => {
-  const isLogin = localStorage.userToken ? true : false;
-  if (to.path == "/login") {
-    // 除了這個頁面可以無視token直接訪問以外
-    next();
-  } else {
-    // 其他頁面沒token就送往登入頁
-    isLogin ? next() : next("/login");
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   const isLogin = localStorage.userToken ? true : false;
+//   if (to.path == "/login") {
+//     // 除了這個頁面可以無視token直接訪問以外
+//     next();
+//   } else {
+//     // 其他頁面沒token就送往登入頁
+//     isLogin ? next() : next("/login");
+//   }
+// });
 
 export default router;
