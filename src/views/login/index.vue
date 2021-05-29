@@ -12,15 +12,15 @@
         <h3 class="title">使用者登入</h3>
       </div>
 
-      <el-form-item prop="account">
+      <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="account"
-          v-model="loginForm.account"
+          ref="username"
+          v-model="loginForm.username"
           placeholder="使用者名"
-          name="account"
+          name="username"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -88,16 +88,16 @@ export default {
       }
     };
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error("密碼必須至少包含6個字元"));
+      if (value.length < 3) {
+        callback(new Error("密碼必須至少包含3個字元"));
       } else {
         callback();
       }
     };
     return {
       loginForm: {
-        account: "m10917030",
-        password: "m10917030",
+        username: "hsipl",
+        password: "",
       },
       loginRules: {
         username: [
@@ -141,8 +141,12 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.$axios
-            .post("http://140.125.45.156:8000/api-token-auth", this.loginForm)
+          this.$axios({
+            method: "post",
+            url: "http://140.125.45.162:3003/api/user/login",
+            data: JSON.stringify(this.loginForm),
+            headers: { "Content-Type": "application/json" },
+          })
             .then((res) => {
               this.$message({
                 message: "登入成功",

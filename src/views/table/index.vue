@@ -25,16 +25,20 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        添加
+        新增
       </el-button>
     </div>
+    <span class="showTotalFund">總經費</span>
+    <span class="showTotalFund" style="color: #721c24">$94870</span>
+    <span class="showTotalFund">我的經費</span>
+    <span class="showTotalFund" style="color: #721c24">${{myMoney}}</span>
     <el-table
       v-loading="listLoading"
       :data="tableData"
       element-loading-text="Loading"
+      highlight-current-row
       border
       fit
-      highlight-current-row
       style="width: 100%"
       empty-text="目前沒有資料"
     >
@@ -46,7 +50,7 @@
 
       <el-table-column label="類別" width="180" align="center">
         <template slot-scope="scope">
-          {{ scope.row.item_type }}
+          {{ scope.row.types }}
         </template>
       </el-table-column>
 
@@ -62,13 +66,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="支付者" width="200" align="center">
+      <el-table-column label="支付者" width="180" align="center">
         <template slot-scope="scope">
           {{ scope.row.payer_id }}
         </template>
       </el-table-column>
 
-      <el-table-column label="記錄者" width="200" align="center">
+      <el-table-column label="記錄者" width="180" align="center">
         <template slot-scope="scope">
           {{ scope.row.recorder_id }}
         </template>
@@ -76,14 +80,14 @@
 
       <el-table-column
         align="center"
-        prop="created_at"
-        label="記帳日期"
+        prop="purchaseDate"
+        label="購買日期"
         sortable
-        width="200"
+        width="240"
       >
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span> {{ scope.row.date }}</span>
+          <span> {{ scope.row.purchaseDate }}</span>
         </template>
       </el-table-column>
 
@@ -106,11 +110,7 @@
       </el-table-column>
     </el-table>
     <div>
-      <Dialog
-        :dialog="dialog"
-        :formData="formData"
-        @update="getFund"
-      ></Dialog>
+      <Dialog :dialog="dialog" :formData="formData" @update="getFund"></Dialog>
     </div>
   </div>
 </template>
@@ -135,53 +135,16 @@ export default {
   data() {
     return {
       tableData: null,
+      myMoney: "i dont know",
       formData: {
         id: "",
-        item_type: "",
+        types: "",
         items: "",
         cost: "",
-        date: "",
+        purchaseDate: "",
         payer_id: "",
         recorder_id: "",
       },
-      fundData: [
-        {
-          id: 1,
-          item_type: "用品費",
-          items: "購買垃圾袋",
-          cost: -120,
-          date: "2021/05/23 16:25",
-          payer_id: "張瑞鴻",
-          recorder_id: "張瑞鴻",
-        },
-        {
-          id: 2,
-          item_type: "餐費",
-          items: "購買中午開會便當",
-          cost: -1095,
-          date: "2021/05/23 16:27",
-          payer_id: "鄭友智",
-          recorder_id: "鄭友智",
-        },
-        {
-          id: 3,
-          item_type: "入帳",
-          items: "科技部計劃入帳",
-          cost: 6000,
-          date: "2021/05/23 17:53",
-          payer_id: "鄒學緯",
-          recorder_id: "鄒學緯",
-        },
-        {
-          id: 4,
-          item_type: "用品費",
-          items: "購買實驗用雞蛋",
-          cost: -300,
-          date: "2021/05/23 18:05",
-          payer_id: "徐仕勳",
-          recorder_id: "徐仕勳",
-        },
-      ],
       listLoading: true,
       search: "",
       dialog: {
@@ -193,40 +156,53 @@ export default {
   },
   created() {
     // this.fetchData();
-    this.getFund()
+    this.getFund();
+    this.getMyMoney();
   },
   methods: {
     getFund() {
-      this.listLoading = true
+      this.listLoading = true;
       // 獲取表格數據
-      // this.$axios
-      //   .get("/api/profiles")
-      //   .then((res) => {
-      //     this.tableData = res.data;
-      //   })
-      //   .catch((err) => console.log(err));    
-      this.tableData = this.fundData
-      this.listLoading = false
+      this.$axios({
+        method: "get",
+        url: "http://140.125.45.162:3003/api/fund",
+      })
+        .then((res) => {
+          this.tableData = res.data;
+        })
+        .catch((err) => console.log(err));
+
+      this.listLoading = false;
+    },
+    getMyMoney() {
+      this.$axios({
+        method: "get",
+        url: "http://140.125.45.162:3003/api/user",
+      })
+        .then((res) => {
+          this.myMoney = res.data["money"];
+        })
+        .catch((err) => console.log(err));
     },
     handleFilter() {
       console.log("handleFilter");
     },
     handleCreate() {
-      this.dialog = {
+      (this.dialog = {
         show: true,
         title: "添加經費",
         option: "add",
-      },
-      this.formData = {
-        id: "",
-        item_type: "",
-        items: "",
-        cost: "",
-        date: "",
-        payer_id: "",
-        recorder_id: "",
-      },
-      console.log("handleCreate");
+      }),
+        (this.formData = {
+          // id: "",
+          types: "",
+          items: "",
+          cost: "",
+          purchaseDate: "",
+          payer_id: "",
+          // recorder_id: "",
+        }),
+        console.log("handleCreate");
     },
     handleEdit(index, row) {
       this.dialog = {
@@ -235,26 +211,42 @@ export default {
         option: "edit",
       };
       this.formData = {
-        id: row.id,
-        item_type: row.item_type,
+        id: row._id,
+        types: row.types,
         items: row.items,
         cost: row.cost,
-        date: row.date,
+        purchaseDate: row.purchaseDate,
         payer_id: row.payer_id,
-        recorder_id: row.recorder_id, 
+        // recorder_id: row.recorder_id,
       };
     },
-    handleDelete(index, row){
-      // this.$axios.delete(`api/profiles/delete/${row._id}`).then(res => {
-      //   this.$message("刪除成功")
-      //   this.getFund()
-      // })
-      console.log("handleDelete")
-      console.log(index, row)
-    }
+    handleDelete(index, row) {
+      console.log(row._id);
+      this.$axios({
+        method: "delete",
+        url: `http://140.125.45.162:3003/api/fund/${row._id}`,
+      }).then(() => {
+        this.$message({
+          message: "刪除成功",
+          type: "success",
+        });
+        this.getFund();
+      });
+    },
   },
   components: {
     Dialog,
   },
 };
 </script>
+
+<style scoped>
+.showTotalFund {
+  text-align: right;
+  margin-left: 10px;
+  font-weight: bold;
+  /* background:#f8d7da; */
+  font-family: "UD Digi Kyokasho N-B";
+  font-size: 18px;
+}
+</style>

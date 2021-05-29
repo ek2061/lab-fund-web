@@ -13,16 +13,16 @@
           :model="formData"
           :rules="form_rules"
           label-position="left"
-          label-width="70px"
+          label-width="80px"
           style="margin: 20px; width: 400px"
         >
-          <el-form-item label="類別:" prop="item_type">
-            <el-select v-model="formData.item_type" placeholder="類別">
+          <el-form-item label="類別" prop="types">
+            <el-select v-model="formData.types" placeholder="類別">
               <el-option
-                v-for="(item_type, index) in item_type_list"
+                v-for="(types, index) in types_list"
                 :key="index"
-                :label="item_type"
-                :value="item_type"
+                :label="types"
+                :value="types"
               >
               </el-option>
             </el-select>
@@ -33,13 +33,22 @@
           <el-form-item prop="cost" label="收支">
             <el-input type="cost" v-model="formData.cost"></el-input>
           </el-form-item>
+          <el-form-item prop="purchaseDate" label="購買日期">
+            <el-date-picker
+              v-model="purchaseDate"
+              type="date"
+              placeholder="選擇日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+            >
+            </el-date-picker>
+          </el-form-item>
           <el-form-item label="支付者" prop="payer_id">
-            <el-select v-model="formData.payer_id" placeholder="支付者">
+            <el-select v-model="formData.payer_id" filterable placeholder="支付者">
               <el-option
-                v-for="(format_payer_id, index) in format_payer_id_list"
-                :key="index"
-                :label="format_payer_id"
-                :value="format_payer_id"
+                v-for="item in format_payer_id_list"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
               </el-option>
             </el-select>
@@ -61,10 +70,44 @@ export default {
   name: "Dialog",
   data() {
     return {
-      item_type_list: ["餐費", "用品費", "入帳", "其他"],
-      format_payer_id_list: ["張瑞鴻", "鄭友智", "鄒學緯", "徐仕勳"],
+      purchaseDate: new Date(),
+      types_list: ["餐費", "用品費", "入帳", "其他"],
+      format_payer_id_list: [{
+        value: 1,
+        label: "徐仕勳"
+      },{
+        value: 2,
+        label: "鄭友智"
+      },{
+        value: 3,
+        label: "邱明豐"
+      },{
+        value: 4,
+        label: "鄭才毅"
+      },{
+        value: 5,
+        label: "許芋鈞"
+      },{
+        value: 6,
+        label: "蔡逢記"
+      },{
+        value: 7,
+        label: "鄒學緯"
+      },{
+        value: 8,
+        label: "王美雲"
+      },{
+        value: 9,
+        label: "柯祉伊"
+      },{
+        value: 10,
+        label: "張瑞鴻"
+      },{
+        value: 11,
+        label: "鄒學緯"
+      }],
       form_rules: {
-        item_type: [
+        types: [
           {
             required: true,
             message: "種類不能為空",
@@ -91,25 +134,25 @@ export default {
     onSumbit(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          // 定義dialog要做的事
-          const opt =
-            this.dialog.option == "add" ? "add" : `edit/${this.formData.id}`;
-          //   this.$axios
-          //     .post(`/api/profiles/${opt}`, this.formData)
-          //     .then(() => {
-          //       //  添加成功
-          //       this.$message({
-          //         message: opt == "add" ? "添加成功" : "編輯成功",
-          //         type: "success",
-          //       });
-          //       // 關閉dailog
-          //       this.dialog.show = false;
-          //       this.$emit("update");
-          //     });
-          console.log(opt);
-          console.log(this.formData);
-          // 關閉dailog
-          this.dialog.show = false;
+          this.formData.purchaseDate = this.purchaseDate
+          const form_method = this.dialog.option === "add" ? "post" : "put";
+          const form_url =
+            this.dialog.option === "add" ? "" : `/${this.formData.id}`;
+          console.log(JSON.stringify(this.formData));
+          this.$axios({
+            method: form_method, // post or put
+            url: "http://140.125.45.162:3003/api/fund" + form_url,
+            data: JSON.stringify(this.formData),
+            headers: { "Content-Type": "application/json" },
+          }).then(() => {
+            this.$message({
+              message: this.dialog.option == "add" ? "添加成功" : "編輯成功",
+              type: "success",
+            });
+            // 關閉dailog
+            this.dialog.show = false;
+            this.$emit("update");
+          });
         }
       });
     },

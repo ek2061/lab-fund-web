@@ -35,14 +35,13 @@ module.exports = {
     port: 8080,
     https: false,
     hotOnly: false,
-    proxy: {
-      // 配置跨域
+    proxy: {  // 配置跨域
       "/api": {
-        target: "http://140.125.45.156:8000/",
-        ws: true,
-        changOrigin: true,
+        target: "http://140.125.45.162:3003/",  // 後端目標
+        ws: true,  // 代理 websockets
+        changOrigin: true,  // 允許跨域
         pathRewrite: {
-          "^/api": "",
+          "^/api": "",  //請求的時候使用這個api就可以
         },
       },
     },

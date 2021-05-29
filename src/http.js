@@ -6,7 +6,7 @@ let loading
 function startLoading() {  // 開始加載動畫
     loading = Loading.service({
         lock: true,  // 是否鎖定
-        text: '加載中請稍後',  // 執行時顯示文字
+        text: '加載中請稍候',  // 執行時顯示文字
         background: 'rgba( 0, 0, 0, 0, 7)'
 
     })
@@ -38,7 +38,7 @@ axios.interceptors.response.use(response => {
 }, error => {
     endLoading()
     // 錯誤提醒
-    Message.error(error.response.data)
+    Message.error(error.response.data.msg)
 
     // 獲取狀態錯誤碼
     const {status} = error.response
