@@ -29,9 +29,9 @@
       </el-button>
     </div>
     <span class="showTotalFund">總經費</span>
-    <span class="showTotalFund" style="color: #721c24">$94870</span>
+    <span class="showTotalFund" style="color: #721c24">${{ labMoney }}</span>
     <span class="showTotalFund">我的經費</span>
-    <span class="showTotalFund" style="color: #721c24">${{myMoney}}</span>
+    <span class="showTotalFund" style="color: #721c24">${{ myMoney }}</span>
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -135,6 +135,7 @@ export default {
   data() {
     return {
       tableData: null,
+      labMoney: "i dont know",
       myMoney: "i dont know",
       formData: {
         id: "",
@@ -155,9 +156,9 @@ export default {
     };
   },
   created() {
-    // this.fetchData();
     this.getFund();
     this.getMyMoney();
+    this.getLabMoney();
   },
   methods: {
     getFund() {
@@ -180,7 +181,18 @@ export default {
         url: "http://140.125.45.162:3003/api/user",
       })
         .then((res) => {
+          console.log(res.data)
           this.myMoney = res.data["money"];
+        })
+        .catch((err) => console.log(err));
+    },
+    getLabMoney() {
+      this.$axios({
+        method: "get",
+        url: "http://140.125.45.162:3003/api/user/total",
+      })
+        .then((res) => {
+          this.labMoney = res.data["money"];
         })
         .catch((err) => console.log(err));
     },
@@ -201,8 +213,7 @@ export default {
           purchaseDate: "",
           payer_id: "",
           // recorder_id: "",
-        }),
-        console.log("handleCreate");
+        })
     },
     handleEdit(index, row) {
       this.dialog = {

@@ -148,10 +148,10 @@ export default {
             headers: { "Content-Type": "application/json" },
           })
             .then((res) => {
-              this.$message({
-                message: "登入成功",
-                type: "success",
-              });
+              // this.$message({
+              //   message: "登入成功",
+              //   type: "success",
+              // });
               const { token } = res.data;
 
               //   儲存在localStorage

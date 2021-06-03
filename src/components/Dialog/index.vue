@@ -38,17 +38,17 @@
               v-model="purchaseDate"
               type="date"
               placeholder="選擇日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </el-form-item>
           <el-form-item label="支付者" prop="payer_id">
-            <el-select v-model="formData.payer_id" filterable placeholder="支付者">
+            <el-select v-model="formData.payer_id" filterable placeholder="支付者" no-match-text="你太會取名了吧我都找不到" no-data-text="無任何支付者可選">
               <el-option
-                v-for="item in format_payer_id_list"
+                v-for="item in payer_list"
                 :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :label="item.name"
+                :value="item._id"
               >
               </el-option>
             </el-select>
@@ -72,40 +72,41 @@ export default {
     return {
       purchaseDate: new Date(),
       types_list: ["餐費", "用品費", "入帳", "其他"],
-      format_payer_id_list: [{
-        value: 1,
-        label: "徐仕勳"
-      },{
-        value: 2,
-        label: "鄭友智"
-      },{
-        value: 3,
-        label: "邱明豐"
-      },{
-        value: 4,
-        label: "鄭才毅"
-      },{
-        value: 5,
-        label: "許芋鈞"
-      },{
-        value: 6,
-        label: "蔡逢記"
-      },{
-        value: 7,
-        label: "鄒學緯"
-      },{
-        value: 8,
-        label: "王美雲"
-      },{
-        value: 9,
-        label: "柯祉伊"
-      },{
-        value: 10,
-        label: "張瑞鴻"
-      },{
-        value: 11,
-        label: "鄒學緯"
-      }],
+      payer_list: [],
+      // format_payer_id_list: [{
+      //   value: 1,
+      //   label: "徐仕勳"
+      // },{
+      //   value: 2,
+      //   label: "鄭友智"
+      // },{
+      //   value: 3,
+      //   label: "邱明豐"
+      // },{
+      //   value: 4,
+      //   label: "鄭才毅"
+      // },{
+      //   value: 5,
+      //   label: "許芋鈞"
+      // },{
+      //   value: 6,
+      //   label: "蔡逢記"
+      // },{
+      //   value: 7,
+      //   label: "鄒學緯"
+      // },{
+      //   value: 8,
+      //   label: "王美雲"
+      // },{
+      //   value: 9,
+      //   label: "柯祉伊"
+      // },{
+      //   value: 10,
+      //   label: "張瑞鴻"
+      // },{
+      //   value: 11,
+      //   label: "鄒學緯"
+      // }],
       form_rules: {
         types: [
           {
@@ -130,7 +131,21 @@ export default {
     dialog: Object,
     formData: Object,
   },
+  created(){
+    this.getPayer()
+  },
   methods: {
+    getPayer() {
+      this.$axios({
+        method: "get",
+        url: "http://140.125.45.162:3003/api/user/all",
+      })
+        .then((res) => {
+          this.payer_list = res.data;
+          // console.log(this.payer_list)
+        })
+        .catch((err) => console.log(err));
+    },
     onSumbit(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
