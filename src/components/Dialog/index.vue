@@ -148,18 +148,23 @@ export default {
     },
     onSumbit(form) {
       this.$refs[form].validate((valid) => {
+        // console.log(this.formData.payer_id)
         if (valid) {
           this.formData.purchaseDate = this.purchaseDate
           const form_method = this.dialog.option === "add" ? "post" : "put";
           const form_url =
             this.dialog.option === "add" ? "" : `/${this.formData.id}`;
-          console.log(JSON.stringify(this.formData));
+          // form_json = JSON.stringify(this.formData)
+          this.formData.payer_id
+          console.log(this.formData)
+          // json = JSON.stringify(this.formData)
           this.$axios({
             method: form_method, // post or put
             url: "http://140.125.45.162:3003/api/fund" + form_url,
             data: JSON.stringify(this.formData),
             headers: { "Content-Type": "application/json" },
-          }).then(() => {
+          }).then((res) => {
+            console.log(res)
             this.$message({
               message: this.dialog.option == "add" ? "添加成功" : "編輯成功",
               type: "success",

@@ -29,9 +29,9 @@
       </el-button>
     </div>
     <span class="showTotalFund">總經費</span>
-    <span class="showTotalFund" style="color: #721c24">${{ labMoney }}</span>
+    <span class="showTotalFund" style="color: #721c24" @update="getLabMoney" v-text="this.labMoney">{{}}</span>
     <span class="showTotalFund">我的經費</span>
-    <span class="showTotalFund" style="color: #721c24">${{ myMoney }}</span>
+    <span class="showTotalFund" style="color: #721c24" @update="getMyMoney" v-text="this.myMoney"></span>
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -169,6 +169,7 @@ export default {
         url: "http://140.125.45.162:3003/api/fund",
       })
         .then((res) => {
+          // console.log(res.data)
           this.tableData = res.data;
         })
         .catch((err) => console.log(err));
@@ -185,6 +186,7 @@ export default {
           this.myMoney = res.data["money"];
         })
         .catch((err) => console.log(err));
+        console.log(this.myMoney)
     },
     getLabMoney() {
       this.$axios({
@@ -236,7 +238,9 @@ export default {
       this.$axios({
         method: "delete",
         url: `http://140.125.45.162:3003/api/fund/${row._id}`,
-      }).then(() => {
+      }).then((res) => {
+        console.log(res)
+        console.log("====================")
         this.$message({
           message: "刪除成功",
           type: "success",
