@@ -23,7 +23,7 @@ axios.interceptors.request.use(config => {
 
     // 設置統一的請求header
     if (localStorage.userToken) {
-        config.headers.Authorization = localStorage.userToken
+        config.headers.Authorization = "Bearer " + localStorage.userToken
     }
     return config
 }, error => {  // 請求失敗時

@@ -16,8 +16,14 @@ export function isExternal(path) {
  */
 export function validUsername(str) {
   return str.replace(/^\s+|\s+$/g, '').length >= 5
-  // const valid_map = ["admin", "editor"];
-  // return valid_map.indexOf(str.trim()) >= 0;
+}
+
+/**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validName(str) {
+  return str.replace(/^\s+|\s+$/g, '').length >= 1
 }
 
 /**

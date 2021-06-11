@@ -1,15 +1,15 @@
 <template>
-  <div class="login-container">
+  <div class="register-container">
     <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
+      ref="registerForm"
+      :model="registerForm"
+      :rules="registerRules"
+      class="register-form"
       auto-complete="on"
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">使用者登入</h3>
+        <h3 class="title">使用者註冊</h3>
       </div>
 
       <el-form-item prop="username">
@@ -18,11 +18,26 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
+          v-model="registerForm.username"
           placeholder="使用者帳號"
           name="username"
           type="text"
           tabindex="1"
+          auto-complete="on"
+        />
+      </el-form-item>
+
+      <el-form-item prop="name">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input
+          ref="name"
+          v-model="registerForm.name"
+          placeholder="姓名"
+          name="name"
+          type="text"
+          tabindex="2"
           auto-complete="on"
         />
       </el-form-item>
@@ -40,15 +55,15 @@
           <el-input
             :key="passwordType"
             ref="password"
-            v-model="loginForm.password"
+            v-model="registerForm.password"
             :type="passwordType"
             placeholder="密碼"
             name="password"
-            tabindex="2"
+            tabindex="3"
             auto-complete="on"
             @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
+            @keyup.enter.native="handleRegister"
           />
           <span class="show-pwd" @click="showPwd">
             <svg-icon
@@ -62,27 +77,33 @@
         :loading="loading"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
-        @click.native.prevent="handleLogin"
-        >登入</el-button
+        @click.native.prevent="handleRegister"
+        >註冊</el-button
       >
 
       <div class="tips">
-        <span style="margin-right: 20px">還沒有帳戶嗎?</span>
-        <span class="hover"><a href="/register"> 註冊</a></span>
+        <span style="margin-right: 20px">已經有帳戶了?</span>
+        <span class="hover"><a href="/login"> 登入</a></span>
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
-import jwt_decode from "jwt-decode";
+import { validUsername, validName } from "@/utils/validate";
 export default {
-  name: "Login",
+  name: "Register",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error("使用者帳號至少包含5個字元"));
+      } else {
+        callback();
+      }
+    };
+    const validateName = (rule, value, callback) => {
+      if (!validName(value)) {
+        callback(new Error("姓名至少包含1個字元"));
       } else {
         callback();
       }
@@ -95,14 +116,16 @@ export default {
       }
     };
     return {
-      loginForm: {
-        username: "hsipl",
+      registerForm: {
+        username: "",
+        name: "",
         password: "",
       },
-      loginRules: {
+      registerRules: {
         username: [
           { required: true, trigger: "blur", validator: validateUsername },
         ],
+        name: [{ required: true, trigger: "blur", validator: validateName }],
         password: [
           { required: true, trigger: "blur", validator: validatePassword },
         ],
@@ -137,31 +160,22 @@ export default {
         this.$refs.password.focus();
       });
     },
-    handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
+    handleRegister() {
+      this.$refs.registerForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           this.$axios({
             method: "post",
-            url: "http://140.125.45.162:3003/api/user/login",
-            data: JSON.stringify(this.loginForm),
+            url: "http://140.125.45.162:3003/api/user",
+            data: JSON.stringify(this.registerForm),
             headers: { "Content-Type": "application/json" },
           })
             .then((res) => {
-              // this.$message({
-              //   message: "登入成功",
-              //   type: "success",
-              // });
-              const { token } = res.data;
-
-              //   儲存在localStorage
-              localStorage.setItem("userToken", token);
-              //   解析token
-              const decoded = jwt_decode(token);
-              // 將token存到vuex中
-              this.$store.dispatch("setAuthenticated", !this.isEmpty(decoded));
-              this.$store.dispatch("setUser", decoded);
-              this.$router.push({ path: this.redirect || "/" });
+              this.$message({
+                message: "註冊成功",
+                type: "success",
+              });
+              this.$router.push({ path: "/login" });
               this.loading = false;
             })
             .catch(() => {
@@ -173,29 +187,21 @@ export default {
         }
       });
     },
-    isEmpty(value) {
-      return (
-        value === undefined ||
-        value === null ||
-        (typeof value === "object" && Object.keys(value).length === 0) ||
-        (typeof value === "string" && value.trim().length === 0)
-      );
-    },
   },
 };
 </script>
 
 <style lang="scss">
-$bg: #283443;
+$bg: #259b90;
 $light_gray: #fff;
 $cursor: #fff;
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
+  .register-container .el-input input {
     color: $cursor;
   }
 }
 /* reset element-ui css */
-.login-container {
+.register-container {
   .el-input {
     display: inline-block;
     height: 47px;
@@ -225,15 +231,15 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg: #2d3a4b;
+$bg: #2aa198;
 $dark_gray: #889aa4;
 $light_gray: #eee;
-.login-container {
+.register-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
-  .login-form {
+  .register-form {
     position: relative;
     width: 520px;
     max-width: 100%;

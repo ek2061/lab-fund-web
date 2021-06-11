@@ -24,6 +24,10 @@ const routes = [
     component: () => import("@/views/login"),
   },
   {
+    path: "/register",
+    component: () => import("@/views/register"),
+  },
+  {
     path: "/404",
     component: () => import("@/views/404"),
   },
@@ -42,7 +46,7 @@ const router = new VueRouter({
 // 路由守衛
 router.beforeEach((to, from, next) => {
   const isLogin = localStorage.userToken ? true : false;
-  if (to.path == "/login") {
+  if (to.path == "/login" || "/register") {
     // 除了這個頁面可以無視token直接訪問以外
     next();
   } else {

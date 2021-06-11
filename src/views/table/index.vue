@@ -68,13 +68,13 @@
 
       <el-table-column label="支付者" width="180" align="center">
         <template slot-scope="scope">
-          {{ scope.row.payer_id }}
+          {{ scope.row.payer_name }}
         </template>
       </el-table-column>
 
       <el-table-column label="記錄者" width="180" align="center">
         <template slot-scope="scope">
-          {{ scope.row.recorder_id }}
+          {{ scope.row.recorder_name }}
         </template>
       </el-table-column>
 
@@ -135,8 +135,8 @@ export default {
   data() {
     return {
       tableData: null,
-      labMoney: "i dont know",
-      myMoney: "i dont know",
+      labMoney: "Nan",
+      myMoney: "Nan",
       formData: {
         id: "",
         types: "",
@@ -169,7 +169,7 @@ export default {
         url: "http://140.125.45.162:3003/api/fund",
       })
         .then((res) => {
-          // console.log(res.data)
+          console.log(res.data)
           this.tableData = res.data;
         })
         .catch((err) => console.log(err));
@@ -239,8 +239,6 @@ export default {
         method: "delete",
         url: `http://140.125.45.162:3003/api/fund/${row._id}`,
       }).then((res) => {
-        console.log(res)
-        console.log("====================")
         this.$message({
           message: "刪除成功",
           type: "success",

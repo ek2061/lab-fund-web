@@ -13,10 +13,6 @@
         <svg-icon icon-class="table" />
         <span>經費表</span>
       </a>
-      <a id="add_user" v-if="user.name == 'hsipl_lab'" href="/add_user">
-          <svg-icon icon-class="add_user" />
-          <span>創建帳戶</span>
-      </a>
       <a id="info" href="/info">
         <svg-icon icon-class="info" />
         <span>關於</span>
