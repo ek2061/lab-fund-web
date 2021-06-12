@@ -7,7 +7,8 @@
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
-      />
+        >{{ search }}</el-input
+      >
       <el-button
         v-waves
         class="filter-item"
@@ -29,9 +30,20 @@
       </el-button>
     </div>
     <span class="showTotalFund">總經費</span>
-    <span class="showTotalFund" style="color: #721c24" @update="getLabMoney" v-text="this.labMoney">{{}}</span>
+    <span
+      class="showTotalFund"
+      style="color: #721c24"
+      @update="getLabMoney"
+      v-text="this.labMoney"
+      >{{}}</span
+    >
     <span class="showTotalFund">我的經費</span>
-    <span class="showTotalFund" style="color: #721c24" @update="getMyMoney" v-text="this.myMoney"></span>
+    <span
+      class="showTotalFund"
+      style="color: #721c24"
+      @update="getMyMoney"
+      v-text="this.myMoney"
+    ></span>
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -44,7 +56,7 @@
     >
       <el-table-column align="center" label="編號" width="110">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
 
@@ -109,6 +121,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="block">
+      <span class="demonstration">分頁測試中</span>
+      <el-pagination
+        :small="this.pagination_needsmall"
+        background
+        @current-change="handleCurrentChange"
+        :layout="this.pagination_layout"
+        :total="1000"
+        :pager-count="5"
+      >
+      </el-pagination>
+    </div>
     <div>
       <Dialog :dialog="dialog" :formData="formData" @update="getFund"></Dialog>
     </div>
@@ -134,6 +158,8 @@ export default {
   // },
   data() {
     return {
+      pagination_needsmall: false, // 用於確認分頁是否需要縮小
+      pagination_layout: "prev, pager, next, jumper", // 用於顯示分頁要多少物件
       tableData: null,
       labMoney: "Nan",
       myMoney: "Nan",
@@ -155,13 +181,38 @@ export default {
       },
     };
   },
+  mounted() {
+    // 監聽網頁寬度
+    window.addEventListener("resize", this.Switching);
+  },
   created() {
+    this.Switching();
     this.getFund();
     this.getMyMoney();
     this.getLabMoney();
   },
   methods: {
+    Switching() {
+      // 變換瀏覽器尺寸時自適應參數
+      let w = document.documentElement.clientWidth || document.body.clientWidth;
+      if (w >= 465) {
+        this.pagination_layout = "prev, pager, next, jumper";
+        this.pagination_needsmall = false;
+      } else if (w >= 375) {
+        // iphone 6/7/8 寬度
+        this.pagination_layout = "prev, pager, next";
+        this.pagination_needsmall = false;
+      } else {  // 更小寬度
+        this.pagination_needsmall = true;
+      }
+    },
+    handleCurrentChange(val) {
+      // 獲取分頁當前頁號碼
+      console.log(`現在是第 ${val} 頁`);
+      console.log(`現在關鍵字是 ${this.search}`)
+    },
     getFund() {
+      // 獲取每筆經費資料
       this.listLoading = true;
       // 獲取表格數據
       this.$axios({
@@ -169,7 +220,7 @@ export default {
         url: "http://140.125.45.162:3003/api/fund",
       })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data);
           this.tableData = res.data;
         })
         .catch((err) => console.log(err));
@@ -177,18 +228,20 @@ export default {
       this.listLoading = false;
     },
     getMyMoney() {
+      // 獲取登入者身上經費總和
       this.$axios({
         method: "get",
         url: "http://140.125.45.162:3003/api/user",
       })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data);
           this.myMoney = res.data["money"];
         })
         .catch((err) => console.log(err));
-        console.log(this.myMoney)
+      console.log(this.myMoney);
     },
     getLabMoney() {
+      // 獲取實驗室全部經費總和
       this.$axios({
         method: "get",
         url: "http://140.125.45.162:3003/api/user/total",
@@ -199,7 +252,18 @@ export default {
         .catch((err) => console.log(err));
     },
     handleFilter() {
-      console.log("handleFilter");
+      console.log(this.search);
+      this.$axios({
+        method: "get",
+        url: "http://140.125.45.162:3003/api/fund",
+        params: { page: 1, keyword: this.search },
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     handleCreate() {
       (this.dialog = {
@@ -215,7 +279,7 @@ export default {
           purchaseDate: "",
           payer_id: "",
           // recorder_id: "",
-        })
+        });
     },
     handleEdit(index, row) {
       this.dialog = {
