@@ -37,7 +37,7 @@ module.exports = {
     hotOnly: false,
     proxy: {  // 配置跨域
       "/api": {
-        target: "http://140.125.45.167:3000",  // 後端目標
+        target: "localhost:3000",  // 後端目標
         ws: true,  // 代理 websockets
         changOrigin: true,  // 允許跨域
         pathRewrite: {
