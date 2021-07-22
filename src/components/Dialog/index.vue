@@ -144,7 +144,7 @@ export default {
     getPayer() {
       this.$axios({
         method: "get",
-        url: "127.0.0.1:3000/api/user/all",
+        url: "http://localhost:3000/api/user/all",
       })
         .then((res) => {
           this.payer_list = res.data;
@@ -166,7 +166,7 @@ export default {
           // json = JSON.stringify(this.formData)
           this.$axios({
             method: form_method, // post or put
-            url: "127.0.0.1:3000/api/fund" + form_url,
+            url: "http://localhost:3000/api/fund" + form_url,
             data: JSON.stringify(this.formData),
             headers: { "Content-Type": "application/json" },
           })
