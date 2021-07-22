@@ -30,19 +30,22 @@ module.exports = {
       .end();
   },
   devServer: {
-    open: true, //process.platform === 'darwin',
+    // open: true, //process.platform === 'darwin',
     host: "0.0.0.0", //'localhost',
-    port: 8080,
+    port: 5000,
     https: false,
-    hotOnly: false,
+    hotOnly: true,
+    disableHostCheck: true,
     proxy: {  // 配置跨域
-      "/api": {
-        target: "http://localhost:3000",  // 後端目標
+      "^/api/": {
+        target: "http://localhost:3000/api/",  // 後端目標
         ws: true,  // 代理 websockets
         changOrigin: true,  // 允許跨域
+        secure: false,
         pathRewrite: {
-          "^/api": "",  //請求的時候使用這個api就可以
+          "^/api": "/api"
         },
+        logLevel: "debug",
       },
     },
     before: (app) => {},

@@ -213,7 +213,7 @@ export default {
       // 獲取表格數據
       this.$axios({
         method: "get",
-        url: "http://localhost:3000/api/fund",
+        url: "http://140.125.45.167:3000/api/fund",
       })
         .then((res) => {
           // console.log(res.data);
@@ -227,7 +227,7 @@ export default {
       // 獲取登入者身上經費總和
       this.$axios({
         method: "get",
-        url: "http://localhost:3000/api/user",
+        url: "http://140.125.45.167:3000/api/user",
       })
         .then((res) => {
           // console.log(res.data);
@@ -240,7 +240,7 @@ export default {
       // 獲取實驗室全部經費總和
       this.$axios({
         method: "get",
-        url: "http://localhost:3000/api/user/total",
+        url: "http://140.125.45.167:3000/api/user/total",
       })
         .then((res) => {
           this.labMoney = res.data["money"];
@@ -251,7 +251,7 @@ export default {
       console.log(this.search);
       this.$axios({
         method: "get",
-        url: "http://localhost:3000/api/fund",
+        url: "http://140.125.45.167:3000/api/fund",
         params: { page: 1, keyword: this.search },
       })
         .then((res) => {
@@ -297,7 +297,7 @@ export default {
       console.log(row._id);
       this.$axios({
         method: "delete",
-        url: `http://localhost:3000/api/fund/${row._id}`,
+        url: `http://140.125.45.167:3000/api/fund/${row._id}`,
       }).then((res) => {
         this.$message({
           message: "刪除成功",
