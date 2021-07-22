@@ -79,40 +79,6 @@ export default {
       purchaseDate: new Date(),
       types_list: ["餐費", "用品費", "入帳", "其他"],
       payer_list: [],
-      // format_payer_id_list: [{
-      //   value: 1,
-      //   label: "徐仕勳"
-      // },{
-      //   value: 2,
-      //   label: "鄭友智"
-      // },{
-      //   value: 3,
-      //   label: "邱明豐"
-      // },{
-      //   value: 4,
-      //   label: "鄭才毅"
-      // },{
-      //   value: 5,
-      //   label: "許芋鈞"
-      // },{
-      //   value: 6,
-      //   label: "蔡逢記"
-      // },{
-      //   value: 7,
-      //   label: "鄒學緯"
-      // },{
-      //   value: 8,
-      //   label: "王美雲"
-      // },{
-      //   value: 9,
-      //   label: "柯祉伊"
-      // },{
-      //   value: 10,
-      //   label: "張瑞鴻"
-      // },{
-      //   value: 11,
-      //   label: "鄒學緯"
-      // }],
       form_rules: {
         types: [
           {
