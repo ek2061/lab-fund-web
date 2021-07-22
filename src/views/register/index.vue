@@ -166,7 +166,7 @@ export default {
           this.loading = true;
           this.$axios({
             method: "post",
-            url: "http://140.125.45.162:3003/api/user",
+            url: "http://140.125.45.167:3000/api/user",
             data: JSON.stringify(this.registerForm),
             headers: { "Content-Type": "application/json" },
           })

@@ -1,22 +1,48 @@
 <template>
-  <el-row :gutter="10">
-    <el-col :xs="8" :sm="6" :md="4" :lg="3"
-      ><div class="grid-content bg-purple"></div>
-      123
-    </el-col>
-    <el-col :xs="4" :sm="6" :md="8" :lg="9"
-      >456
-      <div class="grid-content bg-purple-light"></div
-    ></el-col>
-    <el-col :xs="4" :sm="6" :md="8" :lg="9"
-      ><div class="grid-content bg-purple"></div>
-      789</el-col
-    >
-    <el-col :xs="8" :sm="6" :md="4" :lg="3"
-      ><div class="grid-content bg-purple-light"></div>
-      000</el-col
-    >
-  </el-row>
+  <div style="overflow-x:hidden">
+    <el-row :gutter="20" class="panel-group">
+      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="user" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">user1</div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="user" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">user2</div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="user" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">user3</div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="user" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">user4</div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -50,27 +76,9 @@ export default {
       .icon-people {
         background: #40c9c6;
       }
-      .icon-message {
-        background: #36a3f7;
-      }
-      .icon-money {
-        background: #f4516c;
-      }
-      .icon-shopping {
-        background: #34bfa3;
-      }
     }
     .icon-people {
       color: #40c9c6;
-    }
-    .icon-message {
-      color: #36a3f7;
-    }
-    .icon-money {
-      color: #f4516c;
-    }
-    .icon-shopping {
-      color: #34bfa3;
     }
     .card-panel-icon-wrapper {
       float: left;
@@ -97,20 +105,4 @@ export default {
     }
   }
 }
-// @media (max-width: 750px) {
-//   .card-panel-description {
-//     display: none;
-//   }
-//   .card-panel-icon-wrapper {
-//     float: none !important;
-//     width: 100%;
-//     height: 100%;
-//     margin: 0 !important;
-//     .svg-icon {
-//       display: block;
-//       margin: 14px auto !important;
-//       float: none !important;
-//     }
-//   }
-// }
 </style>

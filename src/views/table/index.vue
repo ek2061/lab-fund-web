@@ -33,7 +33,6 @@
     <span
       class="showTotalFund"
       style="color: #721c24"
-      @update="getLabMoney"
       v-text="this.labMoney"
       >{{}}</span
     >
@@ -41,7 +40,6 @@
     <span
       class="showTotalFund"
       style="color: #721c24"
-      @update="getMyMoney"
       v-text="this.myMoney"
     ></span>
     <el-table
@@ -134,7 +132,7 @@
       </el-pagination>
     </div>
     <div>
-      <Dialog :dialog="dialog" :formData="formData" @update="getFund"></Dialog>
+      <Dialog :dialog="dialog" :formData="formData" @update="updateAll"></Dialog>
     </div>
   </div>
 </template>
@@ -187,9 +185,7 @@ export default {
   },
   created() {
     this.Switching();
-    this.getFund();
-    this.getMyMoney();
-    this.getLabMoney();
+    this.updateAll();
   },
   methods: {
     Switching() {
@@ -217,7 +213,7 @@ export default {
       // 獲取表格數據
       this.$axios({
         method: "get",
-        url: "http://140.125.45.162:3003/api/fund",
+        url: "localhost:3000/api/fund",
       })
         .then((res) => {
           // console.log(res.data);
@@ -231,7 +227,7 @@ export default {
       // 獲取登入者身上經費總和
       this.$axios({
         method: "get",
-        url: "http://140.125.45.162:3003/api/user",
+        url: "localhost:3000/api/user",
       })
         .then((res) => {
           // console.log(res.data);
@@ -244,7 +240,7 @@ export default {
       // 獲取實驗室全部經費總和
       this.$axios({
         method: "get",
-        url: "http://140.125.45.162:3003/api/user/total",
+        url: "localhost:3000/api/user/total",
       })
         .then((res) => {
           this.labMoney = res.data["money"];
@@ -255,7 +251,7 @@ export default {
       console.log(this.search);
       this.$axios({
         method: "get",
-        url: "http://140.125.45.162:3003/api/fund",
+        url: "localhost:3000/api/fund",
         params: { page: 1, keyword: this.search },
       })
         .then((res) => {
@@ -301,15 +297,20 @@ export default {
       console.log(row._id);
       this.$axios({
         method: "delete",
-        url: `http://140.125.45.162:3003/api/fund/${row._id}`,
+        url: `localhost:3000/api/fund/${row._id}`,
       }).then((res) => {
         this.$message({
           message: "刪除成功",
           type: "success",
         });
-        this.getFund();
+        this.updateAll();
       });
     },
+    updateAll(){
+      this.getFund()
+      this.getLabMoney()
+      this.getMyMoney()
+    }
   },
   components: {
     Dialog,

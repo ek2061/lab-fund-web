@@ -43,7 +43,13 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="支付者" prop="payer_id">
-            <el-select v-model="formData.payer_id" filterable placeholder="支付者" no-match-text="你太會取名了吧我都找不到" no-data-text="無任何支付者可選">
+            <el-select
+              v-model="formData.payer_id"
+              filterable
+              placeholder="支付者"
+              no-match-text="你太會取名了吧我都找不到"
+              no-data-text="無任何支付者可選"
+            >
               <el-option
                 v-for="item in payer_list"
                 :key="item.value"
@@ -131,14 +137,14 @@ export default {
     dialog: Object,
     formData: Object,
   },
-  created(){
-    this.getPayer()
+  created() {
+    this.getPayer();
   },
   methods: {
     getPayer() {
       this.$axios({
         method: "get",
-        url: "http://140.125.45.162:3003/api/user/all",
+        url: "http://140.125.45.167:3000/api/user/all",
       })
         .then((res) => {
           this.payer_list = res.data;
@@ -150,29 +156,32 @@ export default {
       this.$refs[form].validate((valid) => {
         // console.log(this.formData.payer_id)
         if (valid) {
-          this.formData.purchaseDate = this.purchaseDate
+          this.formData.purchaseDate = this.purchaseDate;
           const form_method = this.dialog.option === "add" ? "post" : "put";
           const form_url =
             this.dialog.option === "add" ? "" : `/${this.formData.id}`;
           // form_json = JSON.stringify(this.formData)
-          this.formData.payer_id
-          console.log(this.formData)
+          this.formData.payer_id;
+          // console.log(this.formData)
           // json = JSON.stringify(this.formData)
           this.$axios({
             method: form_method, // post or put
-            url: "http://140.125.45.162:3003/api/fund" + form_url,
+            url: "http://140.125.45.167:3000/api/fund" + form_url,
             data: JSON.stringify(this.formData),
             headers: { "Content-Type": "application/json" },
-          }).then((res) => {
-            console.log(res)
-            this.$message({
-              message: this.dialog.option == "add" ? "添加成功" : "編輯成功",
-              type: "success",
+          })
+            .then((res) => {
+              // console.log(res)
+              this.$message({
+                message: this.dialog.option == "add" ? "添加成功" : "編輯成功",
+                type: "success",
+              });
+            })
+            .then(() => {
+              // 關閉dailog
+              this.dialog.show = false;
+              this.$emit("update");
             });
-            // 關閉dailog
-            this.dialog.show = false;
-            this.$emit("update");
-          });
         }
       });
     },

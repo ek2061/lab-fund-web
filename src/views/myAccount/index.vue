@@ -2,7 +2,7 @@
   <div class="infoshow">
     <div class="user">
       <img
-        src="https://avatars.githubusercontent.com/u/15338242?v=4"
+        src="@/assets/noMoney.png"
         class="avatar"
         alt=""
       />
@@ -16,7 +16,7 @@
         <span> {{user.name}}</span>
       </div>
       <div class="user-item">
-        <span>「你這麼牛逼，你媽知道嗎」</span>
+        <span>「沒錢啦」</span>
       </div>
     </div>
   </div>
@@ -35,6 +35,7 @@ export default {
 
 <style scoped>
 .infoshow {
+  overflow-y: hidden;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
