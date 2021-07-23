@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import axios from './http'
+import CONFIG from './config'
 import router from './router'
 import store from './store'
 
@@ -14,7 +15,9 @@ import './icons' // icon
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 
-Vue.prototype.$axios = axios  //註冊全域
+//註冊全域
+Vue.prototype.$axios = axios
+Vue.prototype.$API_URL = CONFIG.API_URL
 
 new Vue({
   router,

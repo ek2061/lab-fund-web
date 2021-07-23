@@ -143,7 +143,7 @@ export default {
           this.loading = true;
           this.$axios({
             method: "post",
-            url: "140.125.45.167:3000/user/login",
+            url: `${this.$API_URL}/user/login`,
             data: JSON.stringify(this.loginForm),
             headers: { "Content-Type": "application/json" },
           })
